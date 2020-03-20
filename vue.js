@@ -206,6 +206,7 @@ CompileUtil = {
         let value = this.getVal(vm, expr);
         let fn = this.updater['modelUpdater'];
         new Watcher(vm, expr, (newVal) => { //给输入框加一个观察者，如果稍后数据更新了会触发此方法
+            // console.log(typeof expr)
             // 用新值赋值给输入框
             fn(node, newVal);
         });
@@ -285,8 +286,9 @@ class Vue {
             for (let key in computed) {
                 /**
                  * 此处为什呢计算属性computed绑定的是this.$data而methods绑定的确是this呢？
-                 * 那是因为计算属性依赖的是data里面的属性，方法就是依赖的它自己
+                 * 那是因为计算属性在编译的时候得到{{}}中的变量getNewName后是去vm.$data中查找方法，方法就是依赖的它自己
                  *  */ 
+                // 当编译的时候去vm.$data中查找计算属性变量名的时候直接给他返回computed[key].call(this)方法执行后的结果
                 Object.defineProperty(this.$data, key, {
                     get: () => {
                         // console.log(this)
